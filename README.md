@@ -11,7 +11,7 @@ This beginner-friendly Python project reads student contacts from `contacts.csv`
 - `loader.py` — reads CSV, rejects bad/duplicate records, saves clean records
 - `analytics.py` — prints data-quality, phone-prefix and email-domain summaries
 - `contacts.csv` — sample input records
-- `clean_contacts.csv` — generated automatically when the program runs
+- `students_clean.csv` — generated automatically when the program runs
 - `proof/` — place your own screenshots of the program running here
 
 ## How to run
