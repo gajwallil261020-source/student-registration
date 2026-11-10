@@ -36,5 +36,4 @@ On some computers, use `python3 main.py` instead.
 ## Concepts used
 Variables, strings, lists, dictionaries, functions, loops, conditional statements, regular expressions, CSV file handling, and `Counter` for simple summaries.
 
-## Student self-notes — edit this in your own words
-I learned how to read CSV data, validate user input, use lists and dictionaries to store records, prevent duplicate entries, and create summary reports. One challenge was checking invalid and repeated phone numbers or email addresses.
+
