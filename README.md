@@ -1,8 +1,6 @@
 # Student Registration & Contact Intelligence System
 
-**Course:** BCA Semester 1 — Python Programming  
-**Student:** G. Lasya Priya  
-**Section:** C
+**Course:** BCA Semester 1 — Python Programming.**Section:** C
 
 ## Project overview
 This beginner-friendly Python project reads student contacts from `contacts.csv`, checks names, Indian mobile numbers and email addresses, rejects invalid or duplicate entries, lets a user view/search/add students, and prints a simple business-intelligence report.
