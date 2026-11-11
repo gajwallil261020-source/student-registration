@@ -1,86 +1,44 @@
-"""Student Registration & Contact Intelligence System."""
 import csv
-import os
-from validator import validate_record
-from loader import load_contacts, save_contacts
-from analytics import show_analytics
+from validator import validate_contact
+from analytics import generate_report
 
-DATA_FILE = "contacts.csv"
+students = []
+with open("student_clean.csv") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        students.append(row)
 
-def read_total(filename=DATA_FILE):
-    with open(filename, "r", newline="", encoding="utf-8") as file:
-        return max(sum(1 for _ in csv.DictReader(file)), 0)
+def save():
+    with open("student_clean.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["name","phone","email"])
+        w.writeheader()
+        w.writerows(students)
 
-def display_records(records):
-    if not records:
-        print("No student records found.")
-        return
-    print("\n{:<22} {:<12} {}".format("NAME", "PHONE", "EMAIL"))
-    print("-" * 65)
-    for record in records:
-        print("{:<22} {:<12} {}".format(record["name"], record["phone"], record["email"]))
-
-def search_records(records):
-    term = input("Enter student name or phone to search: ").strip().lower()
-    matches = [r for r in records if term in r["name"].lower() or term in r["phone"]]
-    display_records(matches)
-
-def add_student(records):
-    new_record = {
-        "name": input("Enter student name: ").strip(),
-        "phone": input("Enter 10-digit mobile number: ").strip(),
-        "email": input("Enter email address: ").strip()
-    }
-    ok, reason = validate_record(new_record)
-    if not ok:
-        print("Cannot add student:", reason)
-        return
-    if any(r["phone"] == new_record["phone"] or r["email"].lower() == new_record["email"].lower() for r in records):
-        print("Cannot add student: duplicate phone or email.")
-        return
-    records.append(new_record)
-    save_contacts(records)
-    print("Student added and saved to clean_contacts.csv.")
-
-def main():
-    if not os.path.exists(DATA_FILE):
-        print("contacts.csv was not found. Keep it in the same folder as main.py.")
-        return
-
-    total = read_total()
-    records, rejected = load_contacts(DATA_FILE)
-    print(f"Loaded {len(records)} valid students and rejected {len(rejected)} records.")
-    save_contacts(records)
-
-    while True:
-        print("\n===== STUDENT REGISTRATION MENU =====")
-        print("1. View all valid students")
-        print("2. Search by name or phone")
-        print("3. Add a student")
-        print("4. Business intelligence report")
-        print("5. Show rejected records")
-        print("6. Exit")
-        choice = input("Choose an option (1-6): ").strip()
-
-        if choice == "1":
-            display_records(records)
-        elif choice == "2":
-            search_records(records)
-        elif choice == "3":
-            add_student(records)
-        elif choice == "4":
-            show_analytics(total, records, rejected)
-        elif choice == "5":
-            if not rejected:
-                print("No rejected records.")
-            else:
-                for record, reason in rejected:
-                    print(f"{record} -> {reason}")
-        elif choice == "6":
-            print("Thank you for using the Student Registration System.")
-            break
-        else:
-            print("Invalid choice. Please enter a number from 1 to 6.")
-
-if __name__ == "__main__":
-    main()
+while True:
+    print("\n1.View 2.Search 3.Add 4.Update 5.Delete 6.Report 7.Exit")
+    ch = input("Enter choice: ")
+    if ch == "1":
+        for s in students: print(s)
+    elif ch == "2":
+        key = input("Enter phone/name: ")
+        for s in students:
+            if key in s["phone"] or key.lower() in s["name"].lower():
+                print(s)
+    elif ch == "3":
+        n = input("Name: "); p = input("Phone: "); e = input("Email: ")
+        v, r = validate_contact(n, p, e)
+        if not v: print(r)
+        else: students.append({"name":n,"phone":p,"email":e}); print("Added")
+    elif ch == "4":
+        p = input("Enter phone to update: ")
+        for s in students:
+            if s["phone"] == p:
+                s["name"] = input("New Name: "); print("Updated")
+    elif ch == "5":
+        p = input("Enter phone to delete: ")
+        students = [s for s in students if s["phone"] != p]
+        print("Deleted")
+    elif ch == "6":
+        generate_report()
+    elif ch == "7":
+        save(); print("Saved. Bye!"); break
